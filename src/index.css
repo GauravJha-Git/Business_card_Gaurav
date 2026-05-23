@@ -1,0 +1,381 @@
+/* ─── Reset ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #060608;
+  --violet: #8B5CF6;
+  --violet-deep: #7C3AED;
+  --glass-border: rgba(255,255,255,0.09);
+  --text-primary: #f0f0f0;
+  --text-muted: rgba(240,240,240,0.45);
+  --text-dim: rgba(240,240,240,0.22);
+  --card-w: 480px;
+  --card-h: 290px;
+}
+
+html, body, #root {
+  width: 100%; height: 100%; overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* ─── Page Layout ─── */
+.page {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* ─── Fixed Overlays ─── */
+.scanlines-overlay {
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.045) 2px, rgba(0,0,0,0.045) 3px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+.vignette-overlay {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.72) 100%);
+  pointer-events: none;
+  z-index: 49;
+}
+
+.flicker-overlay {
+  position: fixed; inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 48;
+}
+
+.glitch-strip {
+  position: fixed; left: 0; right: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0;
+  background: rgba(139,92,246,0.14);
+  mix-blend-mode: screen;
+}
+
+/* ─── Scene ─── */
+.scene {
+  position: relative;
+  perspective: 1000px;
+  perspective-origin: center center;
+}
+
+/* ─── Glow behind card ─── */
+.glow-behind {
+  position: absolute;
+  width: 720px; height: 460px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(ellipse 45% 55% at 38% 50%, rgba(124,58,237,0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 38% 48% at 65% 50%, rgba(124,58,237,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Card Container ─── */
+.card-container {
+  width: var(--card-w);
+  height: var(--card-h);
+  position: relative;
+  cursor: pointer;
+  will-change: transform;
+  border-radius: 20px;
+  z-index: 1;
+  outline: none;
+}
+
+/* ─── Glow Ring ─── */
+.card-glow-ring {
+  position: absolute; inset: -2px;
+  border-radius: 22px;
+  border: 1px solid rgba(139,92,246,0);
+  pointer-events: none;
+  z-index: -1;
+  box-shadow: 0 0 0 0 rgba(139,92,246,0);
+}
+
+/* ─── Card Face (shared) ─── */
+.card-face {
+  position: absolute; inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 8px 60px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(255,255,255,0.05);
+  transition: box-shadow 0.4s ease;
+}
+
+.card-face:hover {
+  box-shadow:
+    0 8px 60px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(255,255,255,0.05),
+    0 0 40px rgba(124,58,237,0.2);
+}
+
+/* ─── Glare ─── */
+.glare {
+  position: absolute; inset: 0;
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ══════════════════════════════
+   FRONT FACE
+══════════════════════════════ */
+.card-front {
+  background: rgba(255,255,255,0.04);
+  padding: 24px 28px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 1;
+}
+
+.front-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.name-block { display: flex; flex-direction: column; gap: 5px; }
+
+.name-main {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.letter { display: inline-block; }
+
+.name-alias {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--violet);
+  letter-spacing: 0.06em;
+}
+
+/* Geometric accent top-right */
+.geo-accent-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 7px;
+  flex-shrink: 0; padding-top: 2px;
+}
+
+.dot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 5px);
+  gap: 4px;
+}
+
+.dot-grid-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--violet);
+  opacity: 0.4;
+}
+
+.accent-vline {
+  width: 1px; height: 24px;
+  background: linear-gradient(to bottom, var(--violet), transparent);
+  opacity: 0.5;
+}
+
+/* Front middle */
+.front-middle { display: flex; flex-direction: column; gap: 7px; }
+
+.role-line {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500; font-size: 0.78rem;
+  color: rgba(240,240,240,0.65);
+  letter-spacing: 0.01em;
+}
+
+.role-sep { display: inline-block; color: var(--violet); margin: 0 6px; }
+
+.oneliner {
+  font-family: 'Space Grotesk', sans-serif;
+  font-style: italic; font-size: 0.71rem;
+  color: var(--violet);
+  border-left: 2px solid var(--violet);
+  padding-left: 8px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.location-line {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.59rem; color: var(--text-dim);
+  display: flex; align-items: center; gap: 5px;
+  letter-spacing: 0.04em;
+}
+
+.location-line svg { width: 9px; height: 9px; fill: rgba(139,92,246,0.5); flex-shrink: 0; }
+
+/* Icon row */
+.icon-row { display: flex; align-items: center; gap: 16px; }
+
+.icon-link {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  color: rgba(240,240,240,0.38);
+  text-decoration: none;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.icon-link svg { width: 17px; height: 17px; fill: currentColor; }
+
+.flip-hint {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.54rem; color: var(--text-dim);
+  letter-spacing: 0.08em;
+  display: flex; align-items: center; gap: 3px;
+  user-select: none; pointer-events: none;
+}
+
+/* ══════════════════════════════
+   BACK FACE
+══════════════════════════════ */
+.card-back {
+  background: rgba(10,8,20,0.75);
+  padding: 24px 52px 20px 28px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.back-diagonal {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden;
+}
+
+.spine-label {
+  position: absolute;
+  right: 13px; top: 50%;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: #4a4a4a;
+  letter-spacing: 0.14em;
+  user-select: none; white-space: nowrap;
+}
+
+.back-headline { display: flex; flex-direction: column; line-height: 0.95; }
+
+.bh-top {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 2.2rem;
+  color: #fff; letter-spacing: -0.02em;
+}
+
+.bh-bot {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 2.2rem;
+  color: var(--violet); letter-spacing: -0.02em;
+}
+
+.contact-list {
+  display: flex; flex-direction: column;
+  gap: 5px; flex: 1;
+  margin: 10px 0 8px;
+}
+
+.contact-row {
+  display: flex; align-items: center; gap: 7px;
+  text-decoration: none;
+  color: #bbb;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px; font-weight: 400;
+  letter-spacing: 0.01em;
+  will-change: transform;
+  transition: color 0.15s;
+}
+
+.chevron { color: var(--violet); font-size: 13px; line-height: 1; flex-shrink: 0; font-weight: 700; }
+
+.back-personality {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: #3d3d3d;
+  line-height: 1.55;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  padding-top: 8px;
+}
+
+/* ══════════════════════════════
+   MAIL BUTTON
+══════════════════════════════ */
+.mail-btn-wrap {
+  margin-top: 26px;
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.mail-btn {
+  position: relative; overflow: hidden;
+  background: transparent;
+  border: 1px solid var(--violet);
+  border-radius: 4px;
+  color: var(--violet);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500; font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  padding: 12px 32px;
+  cursor: pointer;
+  display: block; width: 100%;
+  text-align: center;
+}
+
+.mail-btn-shimmer {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: translateX(-110%);
+  pointer-events: none;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 540px) {
+  :root {
+    --card-w: 90vw;
+    --card-h: calc(90vw * 0.604);
+  }
+  .name-main { font-size: 1.45rem; }
+  .bh-top, .bh-bot { font-size: 1.65rem; }
+  .card-front { padding: 18px 18px 14px; }
+  .card-back { padding: 18px 44px 14px 18px; }
+  .mail-btn { width: 90vw; }
+}
+
+@media (max-height: 600px) {
+  :root { --card-h: min(290px, 44vh); }
+}
