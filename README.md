@@ -8,7 +8,7 @@ Floats. Tilts. Flips. Glitches occasionally — on purpose.
 
 One side has the basics. The other side means business.
 
-**[Live →](https://your-deployment-url.vercel.app)**
+**[Live →](https://business-card-gaurav.vercel.app/)**
 
 ---
 
