@@ -6,6 +6,7 @@ export default function MailButton() {
 
   const onEnter = () => {
     const gsap = window.gsap
+    if (!gsap) return
     gsap.to(btnRef.current, {
       backgroundColor: '#7C3AED',
       color: '#fff',
@@ -19,7 +20,9 @@ export default function MailButton() {
   }
 
   const onLeave = () => {
-    window.gsap.to(btnRef.current, {
+    const gsap = window.gsap
+    if (!gsap) return
+    gsap.to(btnRef.current, {
       backgroundColor: 'transparent',
       color: '#8B5CF6',
       borderColor: '#8B5CF6',
@@ -28,38 +31,36 @@ export default function MailButton() {
   }
 
   const onClick = (e) => {
-    // Stop the click from bubbling up to the card flip handler
-    e.stopPropagation()
-
+    // Only run the animation — let the browser follow the <a href> natively.
+    // Do NOT call stopPropagation or preventDefault here.
     const gsap = window.gsap
+    if (!gsap) return
     gsap.timeline()
       .to(btnRef.current, { scale: 0.96, duration: 0.09 })
       .to(btnRef.current, { scale: 1, duration: 0.25, ease: 'elastic.out(1.5,0.5)' })
-
-    // Use a hidden anchor — most reliable cross-browser mailto trigger
-    const a = document.createElement('a')
-    a.href = 'mailto:gauravjha092006@gmail.com'
-    a.style.display = 'none'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
   }
 
   return (
-    // stopPropagation on wrapper too so no event leaks to card
-    <div className="mail-btn-wrap" onClick={e => e.stopPropagation()}>
-      <button
+    <div className="mail-btn-wrap">
+      {/*
+        Render as a real <a href="mailto:..."> so the browser handles
+        it natively — no JS needed to open the mail client.
+        GSAP animations fire on top of the native link behavior.
+      */}
+      <a
         ref={btnRef}
+        href="https://mail.google.com/mail/?view=cm&fs=1&to=gauravjha092006@gmail.com"
+        target="_blank"
+        rel="noopener noreferrer"
         className="mail-btn"
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         onClick={onClick}
-        aria-label="Drop a Mail — gauravjha092006@gmail.com"
-        type="button"
+        aria-label="Drop a Mail — opens Gmail compose"
       >
         <span className="mail-btn-shimmer" ref={shimmerRef} />
         DROP A MAIL
-      </button>
+      </a>
     </div>
   )
 }

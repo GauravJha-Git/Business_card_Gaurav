@@ -51,7 +51,7 @@ export default function CardBack() {
 
       {/* Contact list */}
       <div className="contact-list">
-        <ContactRow href="mailto:gauravjha092006@gmail.com" text="gauravjha092006@gmail.com" isMailto />
+        <ContactRow href="https://mail.google.com/mail/?view=cm&fs=1&to=gauravjha092006@gmail.com" text="gauravjha092006@gmail.com" />
         <ContactRow href="tel:+919523391106"                text="+91-9523391106"             isTel />
         <ContactRow href="https://www.linkedin.com/in/gaurav-jha09/"               text="linkedin.com/in/gaurav-jha09" />
         <ContactRow href="https://github.com/GauravJha-Git"                        text="github.com/GauravJha-Git" />
@@ -60,7 +60,7 @@ export default function CardBack() {
 
       {/* Personality micro-text */}
       <div className="back-personality">
-        "Deep into philosophy and cinema. Also the guy with goofy glasses at McDonald's."
+        "Debugging reality since 2006. Patch notes pending."
       </div>
     </div>
   )

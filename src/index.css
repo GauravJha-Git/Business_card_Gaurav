@@ -248,6 +248,7 @@ body {
   text-decoration: none;
   cursor: pointer;
   will-change: transform;
+  pointer-events: auto;   /* explicit — never blocked by parent inheritance */
 }
 
 .icon-link svg { width: 17px; height: 17px; fill: currentColor; }
@@ -318,6 +319,8 @@ body {
   letter-spacing: 0.01em;
   will-change: transform;
   transition: color 0.15s;
+  pointer-events: auto;
+  width: fit-content;
 }
 
 .chevron { color: var(--violet); font-size: 13px; line-height: 1; flex-shrink: 0; font-weight: 700; }
@@ -354,6 +357,8 @@ body {
   cursor: pointer;
   display: block; width: 100%;
   text-align: center;
+  text-decoration: none;      /* needed since it's now an <a> tag */
+  pointer-events: auto;       /* always clickable regardless of parent */
 }
 
 .mail-btn-shimmer {
