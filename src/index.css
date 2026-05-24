@@ -169,6 +169,7 @@ body {
   line-height: 1;
   letter-spacing: 0.04em;
   color: #fff;
+  white-space: nowrap; /* prevent letter spans from wrapping */
 }
 
 .letter { display: inline-block; }
@@ -372,15 +373,35 @@ body {
 @media (max-width: 540px) {
   :root {
     --card-w: 90vw;
-    --card-h: calc(90vw * 0.604);
+    /* Taller ratio so back-card content (headline + 5 rows + text) fits */
+    --card-h: calc(90vw * 0.88);
   }
-  .name-main { font-size: 1.45rem; }
-  .bh-top, .bh-bot { font-size: 1.65rem; }
-  .card-front { padding: 18px 18px 14px; }
-  .card-back { padding: 18px 44px 14px 18px; }
-  .mail-btn { width: 90vw; }
+
+  /* ── Front face ── */
+  .card-front { padding: 16px 16px 14px; }
+  .name-main  { font-size: 1.35rem; }
+  .name-alias { font-size: 10px; }
+  .role-line  { font-size: 0.7rem; }
+  .oneliner   { font-size: 0.65rem; }
+  .front-middle { gap: 5px; }
+  .icon-row   { gap: 12px; }
+
+  /* ── Back face ── */
+  /* Remove extra right padding — spine label is hidden on mobile */
+  .card-back  { padding: 16px 16px 14px 16px; }
+  .spine-label { display: none; }
+  .bh-top, .bh-bot { font-size: 1.5rem; }
+  .contact-list { gap: 3px; margin: 6px 0 5px; }
+  .contact-row  { font-size: 10px; gap: 5px; }
+  .chevron      { font-size: 11px; }
+  .back-personality { font-size: 8px; padding-top: 6px; }
+
+  /* ── Button ── */
+  .mail-btn-wrap { margin-top: 20px; }
+  .mail-btn { width: 90vw; padding: 11px 24px; }
 }
 
-@media (max-height: 600px) {
-  :root { --card-h: min(290px, 44vh); }
+@media (max-height: 700px) {
+  /* Ensure card + button never overflow viewport height */
+  :root { --card-h: min(var(--card-h), 52vh); }
 }

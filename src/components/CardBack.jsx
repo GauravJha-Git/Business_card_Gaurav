@@ -1,7 +1,8 @@
 import { useRef } from 'react'
+import { openMailWithFallback } from '../utils/openMail'
 
 // Contact row with slide hover
-function ContactRow({ href, text, isMailto, isTel }) {
+function ContactRow({ href, text, isMailto, isTel, onClick }) {
   const ref  = useRef(null)
   const gsap = window.gsap
 
@@ -9,6 +10,11 @@ function ContactRow({ href, text, isMailto, isTel }) {
   const onLeave = () => gsap.to(ref.current, { x: 0, color: '#bbb', duration: 0.45, ease: 'elastic.out(1,0.4)' })
 
   const target = isMailto || isTel ? undefined : '_blank'
+
+  const handleClick = (e) => {
+    e.stopPropagation()
+    if (onClick) onClick(e)
+  }
 
   return (
     <a
@@ -19,7 +25,7 @@ function ContactRow({ href, text, isMailto, isTel }) {
       className="contact-row"
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      onClick={e => e.stopPropagation()}
+      onClick={handleClick}
     >
       <span className="chevron">›</span>
       <span>{text}</span>
@@ -51,7 +57,11 @@ export default function CardBack() {
 
       {/* Contact list */}
       <div className="contact-list">
-        <ContactRow href="https://mail.google.com/mail/?view=cm&fs=1&to=gauravjha092006@gmail.com" text="gauravjha092006@gmail.com" />
+        <ContactRow
+          href="mailto:gauravjha092006@gmail.com"
+          text="gauravjha092006@gmail.com"
+          onClick={openMailWithFallback}
+        />
         <ContactRow href="tel:+919523391106"                text="+91-9523391106"             isTel />
         <ContactRow href="https://www.linkedin.com/in/gaurav-jha09/"               text="linkedin.com/in/gaurav-jha09" />
         <ContactRow href="https://github.com/GauravJha-Git"                        text="github.com/GauravJha-Git" />

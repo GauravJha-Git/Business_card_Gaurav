@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { openMailWithFallback } from '../utils/openMail'
 
 export default function MailButton() {
   const btnRef     = useRef(null)
@@ -31,32 +32,27 @@ export default function MailButton() {
   }
 
   const onClick = (e) => {
-    // Only run the animation — let the browser follow the <a href> natively.
-    // Do NOT call stopPropagation or preventDefault here.
+    // Run GSAP scale animation
     const gsap = window.gsap
-    if (!gsap) return
-    gsap.timeline()
-      .to(btnRef.current, { scale: 0.96, duration: 0.09 })
-      .to(btnRef.current, { scale: 1, duration: 0.25, ease: 'elastic.out(1.5,0.5)' })
+    if (gsap) {
+      gsap.timeline()
+        .to(btnRef.current, { scale: 0.96, duration: 0.09 })
+        .to(btnRef.current, { scale: 1, duration: 0.25, ease: 'elastic.out(1.5,0.5)' })
+    }
+    // Try native mail app → fallback Gmail web
+    openMailWithFallback(e)
   }
 
   return (
     <div className="mail-btn-wrap">
-      {/*
-        Render as a real <a href="mailto:..."> so the browser handles
-        it natively — no JS needed to open the mail client.
-        GSAP animations fire on top of the native link behavior.
-      */}
       <a
         ref={btnRef}
-        href="https://mail.google.com/mail/?view=cm&fs=1&to=gauravjha092006@gmail.com"
-        target="_blank"
-        rel="noopener noreferrer"
+        href="mailto:gauravjha092006@gmail.com"
         className="mail-btn"
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         onClick={onClick}
-        aria-label="Drop a Mail — opens Gmail compose"
+        aria-label="Drop a Mail"
       >
         <span className="mail-btn-shimmer" ref={shimmerRef} />
         DROP A MAIL
