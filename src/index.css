@@ -373,35 +373,42 @@ body {
 @media (max-width: 540px) {
   :root {
     --card-w: 90vw;
-    /* Taller ratio so back-card content (headline + 5 rows + text) fits */
-    --card-h: calc(90vw * 0.88);
+    --card-h: calc(90vw * 0.604);
   }
 
   /* ── Front face ── */
-  .card-front { padding: 16px 16px 14px; }
-  .name-main  { font-size: 1.35rem; }
-  .name-alias { font-size: 10px; }
-  .role-line  { font-size: 0.7rem; }
-  .oneliner   { font-size: 0.65rem; }
-  .front-middle { gap: 5px; }
+  .card-front { padding: 14px 18px 12px; }
+  .name-main  { font-size: 1.25rem; }
+  .name-alias { font-size: 9px; }
+  .role-line  { font-size: 0.65rem; }
+  .oneliner   { font-size: 0.58rem; padding-left: 6px; }
+  .location-line { font-size: 0.5rem; }
+  .front-middle { gap: 4px; }
   .icon-row   { gap: 12px; }
+  .icon-link  { width: 26px; height: 26px; }
+  .icon-link svg { width: 14px; height: 14px; }
+  .flip-hint { font-size: 0.45rem; }
 
   /* ── Back face ── */
-  /* Remove extra right padding — spine label is hidden on mobile */
-  .card-back  { padding: 16px 16px 14px 16px; }
+  .card-back  { padding: 16px 18px 14px 18px; }
   .spine-label { display: none; }
+  
+  /* CRITICAL FIX: Put LET'S TALK on one line to save vertical space */
+  .back-headline { flex-direction: row; gap: 6px; align-items: baseline; }
   .bh-top, .bh-bot { font-size: 1.5rem; }
-  .contact-list { gap: 3px; margin: 6px 0 5px; }
-  .contact-row  { font-size: 10px; gap: 5px; }
-  .chevron      { font-size: 11px; }
-  .back-personality { font-size: 8px; padding-top: 6px; }
+  
+  /* Now we have room to breathe, so restore readable sizes */
+  .contact-list { gap: 4px; margin: 8px 0 6px; }
+  .contact-row  { font-size: 9.5px; gap: 5px; }
+  .chevron      { font-size: 10px; }
+  .back-personality { font-size: 7.5px; padding-top: 6px; line-height: 1.4; }
 
   /* ── Button ── */
   .mail-btn-wrap { margin-top: 20px; }
-  .mail-btn { width: 90vw; padding: 11px 24px; }
+  .mail-btn { width: 90vw; padding: 12px 24px; font-size: 0.7rem; }
 }
 
-@media (max-height: 700px) {
-  /* Ensure card + button never overflow viewport height */
-  :root { --card-h: min(var(--card-h), 52vh); }
+@media (max-height: 700px) and (min-width: 541px) {
+  /* Ensure card + button never overflow viewport height on desktop */
+  :root { --card-h: min(290px, 52vh); }
 }
